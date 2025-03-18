@@ -1,0 +1,136 @@
+﻿@using Services
+@using System.Security.Claims
+
+@implements IDisposable
+@inherits LayoutComponentBase
+
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject InMemoryStateService InMemoryStateService // Inject the service
+
+
+<div class="full-screen">
+    <AuthorizeView>
+        <Authorized>
+            @if (context?.User?.Identity?.IsAuthenticated == true)
+            {
+                <div class="top-nav navbar navbar-dark bg-dark px-3">
+                    <a class="navbar-brand" href="/">WebApp</a>
+                    <div class="d-flex">
+                        <a class="nav-link text-white" href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+                        <a class="nav-link text-white" href="/account/manage">@context.User.Identity.Name</a>
+                       @*  <form action="/Account/Logout" method="post" class="d-inline" @onsubmit="ResetSession">
+                            <AntiforgeryToken />
+                            <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                            <button type="submit" class="btn btn-link text-white">Logout</button>
+                        </form> *@
+                        <button class="btn btn-link text-white" @onclick="ResetSession">Logout</button>
+
+
+                    </div>
+                </div>
+            }
+        </Authorized>
+        <NotAuthorized>
+            <div class="top-nav navbar navbar-dark bg-dark px-3 w-100">
+                <a class="navbar-brand" href="/">WebApp</a>
+                <div class="d-flex">
+                    <a class="nav-link text-white" href="/about">About</a>
+                    <a class="nav-link text-white" href="/account/register">Register</a>
+                    <a class="nav-link text-white" href="/account/login">Login</a>
+                </div>
+            </div>
+        </NotAuthorized>
+    </AuthorizeView>
+
+
+</div>
+
+@code {
+    private string? currentUrl;
+
+    protected override void OnInitialized()
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        StateHasChanged();
+    }
+    private async Task ResetSession()
+    {
+        Console.WriteLine("Logout initiated");
+
+        // Get the user ID from AuthenticationStateProvider
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var userId = authState.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (!string.IsNullOrEmpty(userId))
+        {
+            // Clear the user's session using their ID
+            InMemoryStateService.ClearSession(userId);
+            Console.WriteLine($"Cleared session for user: {userId}");
+        }
+        else
+        {
+            Console.WriteLine("No user ID found during logout");
+        }
+
+        // Clear all sessions when logging out
+        InMemoryStateService.ClearAllSessions();
+        Console.WriteLine("Cleared all sessions on logout");
+
+        // Navigate to the logout action or home page after clearing sessions
+        NavigationManager.NavigateTo("/");
+    }
+
+
+
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+}
+<style>
+
+    .top-nav {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem 1.5rem; /* Add padding to the top, bottom, left, and right */
+    }
+
+    .navbar-brand, .nav-link, .btn-link {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 1rem; /* Add padding to links */
+    }
+
+    .full-screen {
+        display: flex;
+        flex-direction: column;
+        width: 100vw; /* Ensure full viewport width */
+        overflow-x: hidden; /* Prevent horizontal scrolling */
+    }
+
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    .navbar-dark {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .d-flex {
+        width: auto;
+    }
+</style>

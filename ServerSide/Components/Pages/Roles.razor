@@ -1,0 +1,30 @@
+﻿@page "/roles"
+
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@inject RoleManager<IdentityRole> RoleManager
+
+<h3>Available Roles</h3>
+
+@if (roles == null)
+{
+    <p><em>Loading roles...</em></p>
+}
+else
+{
+    <ul>
+        @foreach (var role in roles)
+        {
+            <li>@role.Name</li>
+        }
+    </ul>
+}
+
+@code {
+    private List<IdentityRole>? roles;
+
+    protected override async Task OnInitializedAsync()
+    {
+        roles = await RoleManager.Roles.ToListAsync();
+    }
+}

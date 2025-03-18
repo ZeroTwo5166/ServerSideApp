@@ -1,0 +1,159 @@
+﻿@page "/Account/RegisterConfirmation"
+
+@using System.Text
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.WebUtilities
+@using ServerSide.Data
+@using System.ComponentModel.DataAnnotations;
+@using Microsoft.EntityFrameworkCore
+
+@inject UserManager<ApplicationUser> UserManager
+@inject IEmailSender<ApplicationUser> EmailSender
+@inject NavigationManager NavigationManager
+@inject IdentityRedirectManager RedirectManager
+
+<PageTitle>Register confirmation</PageTitle>
+
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="col-md-6">
+        <h1 class="text-center">Register Confirmation</h1>
+        <h3 class="text-center">Enter your CPR to complete the registration and verify your email.</h3>
+
+        <StatusMessage Message="@statusMessage" />
+
+        @if (emailConfirmationLink is not null)
+        {
+            <EditForm Model="Input" FormName="send-code" OnValidSubmit="OnValidSubmitAsync" method="post">
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-danger" />
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="Input.Code" class="form-control" autocomplete="off" placeholder="Please enter the code." />
+                    <label for="code" class="control-label form-label">Enter CPR</label>
+                    <ValidationMessage For="() => Input.Code" class="text-danger" />
+                </div>
+
+                <button type="submit" class="w-100 btn btn-lg btn-primary">Submit</button>
+            </EditForm>
+        }
+        else
+        {
+            <p class="text-center">Please check your email to confirm your account.</p>
+        }
+    </div>
+</div>
+
+@code {
+    private string? emailConfirmationLink;
+    private string? statusMessage;
+    private string? message;
+
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    [SupplyParameterFromQuery]
+    private string? Email { get; set; }
+
+    [SupplyParameterFromQuery]
+    private string? ReturnUrl { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Email is null)
+        {
+            RedirectManager.RedirectTo("");
+        }
+
+        var user = await UserManager.FindByEmailAsync(Email);
+        if (user is null)
+        {
+            HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+            statusMessage = "Error finding user for unspecified email";
+        }
+        else if (EmailSender is IdentityNoOpEmailSender)
+        {
+            var userId = await UserManager.GetUserIdAsync(user);
+            var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            emailConfirmationLink = NavigationManager.GetUriWithQueryParameters(
+                NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri,
+                new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = ReturnUrl });
+        }
+    }
+
+    private async Task OnValidSubmitAsync()
+    {
+        var user = await UserManager.FindByEmailAsync(Email);
+        if (user is null)
+        {
+            statusMessage = "Error: User not found.";
+            StateHasChanged();
+            return;
+        }
+
+        using (var scope = HttpContext.RequestServices.CreateScope())
+        {
+            var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+            // Check if the user already has a CPR entry
+            var existingCprEntry = await dbContext.Cprs.FirstOrDefaultAsync(c => c.UserId == user.Id);
+            if (existingCprEntry != null)
+            {
+                statusMessage = "Error: You already have a CPR registered.";
+                StateHasChanged();
+                return; // Exit if CPR already exists
+            }
+
+            // Check if the entered CPR already exists in the table
+            var cprEntry = await dbContext.Cprs.FirstOrDefaultAsync(c => c.CprNr == Input.Code);
+            if (cprEntry is null)
+            {
+                var newCpr = new Cpr { CprNr = Input.Code, UserId = user.Id }; // Use your actual Cpr class here
+                dbContext.Cprs.Add(newCpr);
+                await dbContext.SaveChangesAsync();
+                statusMessage = "CPR saved successfully!";
+
+                var email = await UserManager.GetEmailAsync(user);
+                var emailConfirmationToken = await UserManager.GenerateEmailConfirmationTokenAsync(user);
+                var confirmEmailResult = await UserManager.ConfirmEmailAsync(user, emailConfirmationToken);
+
+                if (confirmEmailResult.Succeeded)
+                {
+                    message = "Your CPR has been added and email is verified.";
+                    statusMessage = message;
+
+                    // Delay for 2 seconds before redirecting to the login page
+                    // await Task.Delay(2000);
+                    // NavigationManager.NavigateTo("/Account/Login");
+                    // return; // Exit after redirection
+                }
+                else
+                {
+                    message = "Your email confirmation failed. Please try again.";
+                }
+            }
+            else
+            {
+                statusMessage = "Error: This CPR is already registered.";
+            }
+
+            statusMessage = message;
+
+        }
+
+        StateHasChanged();
+    }
+
+    private sealed class InputModel
+    {
+        [Required(ErrorMessage = "CPR is required.")]
+        [StringLength(10, ErrorMessage = "The {0} must be exactly {1} digits long.", MinimumLength = 10)]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "CPR must be exactly 10 digits and contain only numbers.")]
+        [DataType(DataType.Text)]
+        [Display(Name = "CPR Code")]
+        public string Code { get; set; } = "";
+    }
+}

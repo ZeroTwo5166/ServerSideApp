@@ -1,0 +1,45 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\subar\\source\\repos\\ServerSide\\ServerSide\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\ServerSide.bundle.scp.css",
+      "PackagePath": "staticwebassets\\ServerSide.bundle.scp.css"
+    },
+    {
+      "Id": "C:\\Users\\subar\\source\\repos\\ServerSide\\ServerSide\\wwwroot\\app.css",
+      "PackagePath": "staticwebassets\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\subar\\source\\repos\\ServerSide\\ServerSide\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\subar\\source\\repos\\ServerSide\\ServerSide\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\subar\\source\\repos\\ServerSide\\ServerSide\\wwwroot\\favicon.png",
+      "PackagePath": "staticwebassets\\favicon.png"
+    },
+    {
+      "Id": "C:\\Users\\subar\\source\\repos\\ServerSide\\ServerSide\\wwwroot\\images\\background.jpg",
+      "PackagePath": "staticwebassets\\images\\background.jpg"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.ServerSide.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.ServerSide.props",
+      "PackagePath": "build\\ServerSide.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.ServerSide.props",
+      "PackagePath": "buildMultiTargeting\\ServerSide.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.ServerSide.props",
+      "PackagePath": "buildTransitive\\ServerSide.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

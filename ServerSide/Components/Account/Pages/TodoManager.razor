@@ -1,0 +1,89 @@
+﻿@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.EntityFrameworkCore
+@using ServerSide.Data
+
+
+@inject ApplicationDbContext DbContext
+
+<div>
+    <h2>Your To-Do List</h2>
+
+    <EditForm Model="newTodoItem" OnValidSubmit="AddTodoItem">
+        <DataAnnotationsValidator />
+        <ValidationSummary class="text-danger" />
+
+        <div class="form-floating mb-3">
+            <InputText @bind-Value="newTodoItem.Title" class="form-control" placeholder="Enter your task" />
+            <label for="task" class="control-label form-label">New Task</label>
+            <ValidationMessage For="() => newTodoItem.Title" class="text-danger" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add</button>
+    </EditForm>
+
+    <ul class="list-group mt-3">
+        @if (todoItems.Count > 0)
+        {
+            @foreach (var item in todoItems)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    @item.Item
+                    <button class="btn btn-danger btn-sm" @onclick="() => RemoveTodoItem(item.Id)">Remove</button>
+                </li>
+            }
+        }
+        else
+        {
+            <li class="list-group-item">No To-Do items found.</li>
+        }
+    </ul>
+</div>
+
+@code {
+    private List<Todolist> todoItems = new();
+    private TodoItemModel newTodoItem = new();
+
+    [Parameter]
+    public string UserId { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadTodoItems();
+    }
+
+    private async Task LoadTodoItems()
+    {
+        todoItems = await DbContext.Todolists
+            .Where(t => t.UserId == UserId)
+            .ToListAsync();
+    }
+
+    private async Task AddTodoItem()
+    {
+        if (!string.IsNullOrWhiteSpace(newTodoItem.Title))
+        {
+            var todo = new Todolist { Item = newTodoItem.Title, UserId = UserId };
+            DbContext.Todolists.Add(todo);
+            await DbContext.SaveChangesAsync();
+            newTodoItem.Title = string.Empty; // Clear the input after adding
+            await LoadTodoItems(); // Reload the list
+        }
+    }
+
+    private async Task RemoveTodoItem(int id)
+    {
+        var item = await DbContext.Todolists.FindAsync(id);
+        if (item != null)
+        {
+            DbContext.Todolists.Remove(item);
+            await DbContext.SaveChangesAsync();
+            await LoadTodoItems(); // Reload the list
+        }
+    }
+
+    private class TodoItemModel
+    {
+        public string Title { get; set; } = string.Empty;
+    }
+}
