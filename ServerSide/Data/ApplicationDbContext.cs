@@ -5,7 +5,7 @@ namespace ServerSide.Data
 {
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
     {
-        public DbSet<Cpr> Cprs { get; set; }
+        public DbSet<CprRecord> Cprs { get; set; }
         public DbSet<Todolist> Todolists { get; set; }
 
 
@@ -14,7 +14,7 @@ namespace ServerSide.Data
             base.OnModelCreating(modelBuilder);
 
             // Configure Cpr-User relationship
-            modelBuilder.Entity<Cpr>()
+            modelBuilder.Entity<CprRecord>()
                 .HasOne(c => c.User)
                 .WithMany() // One user can have multiple Cpr records
                 .HasForeignKey(c => c.UserId)

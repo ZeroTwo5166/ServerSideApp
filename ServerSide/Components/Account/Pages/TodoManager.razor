@@ -2,40 +2,54 @@
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.EntityFrameworkCore
 @using ServerSide.Data
-
-
 @inject ApplicationDbContext DbContext
 
-<div>
-    <h2>Your To-Do List</h2>
+<div class="container mt-5">
+    <h2 class="text-center">Your To-Do List</h2>
 
-    <EditForm Model="newTodoItem" OnValidSubmit="AddTodoItem">
+    <EditForm Model="newTodoItem" OnValidSubmit="AddTodoItem" class="mb-4">
         <DataAnnotationsValidator />
         <ValidationSummary class="text-danger" />
 
         <div class="form-floating mb-3">
             <InputText @bind-Value="newTodoItem.Title" class="form-control" placeholder="Enter your task" />
-            <label for="task" class="control-label form-label">New Task</label>
+            <label class="form-label">Title</label>
             <ValidationMessage For="() => newTodoItem.Title" class="text-danger" />
         </div>
 
-        <button type="submit" class="btn btn-primary">Add</button>
+        <div class="form-floating mb-3">
+            <InputTextArea @bind-Value="newTodoItem.Description" class="form-control" placeholder="Enter description" />
+            <label class="form-label">Description</label>
+            <ValidationMessage For="() => newTodoItem.Description" class="text-danger" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Add To-Do</button>
     </EditForm>
 
-    <ul class="list-group mt-3">
+    <ul class="list-group">
         @if (todoItems.Count > 0)
         {
             @foreach (var item in todoItems)
             {
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    @item.Item
-                    <button class="btn btn-danger btn-sm" @onclick="() => RemoveTodoItem(item.Id)">Remove</button>
+                    <div>
+                        <strong>@item.Title</strong><br />
+                        <small>@item.Description</small><br />
+                        <small class="text-muted">Created: @item.createdDate.ToString("g")</small>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <InputCheckbox @bind-Value="item.IsCompleted" class="form-check-input me-2" @onchange="() => UpdateTodoStatus(item)" />
+                        <span class="badge @(item.IsCompleted ? "bg-success" : "bg-warning")">
+                            @(item.IsCompleted ? "Completed" : "Pending")
+                        </span>
+                        <button class="btn btn-danger btn-sm ms-2" @onclick="() => RemoveTodoItem(item.Id)">Remove</button>
+                    </div>
                 </li>
             }
         }
         else
         {
-            <li class="list-group-item">No To-Do items found.</li>
+            <li class="list-group-item text-center">No To-Do items found.</li>
         }
     </ul>
 </div>
@@ -56,6 +70,7 @@
     {
         todoItems = await DbContext.Todolists
             .Where(t => t.UserId == UserId)
+            .OrderByDescending(t => t.createdDate)
             .ToListAsync();
     }
 
@@ -63,11 +78,19 @@
     {
         if (!string.IsNullOrWhiteSpace(newTodoItem.Title))
         {
-            var todo = new Todolist { Item = newTodoItem.Title, UserId = UserId };
+            var todo = new Todolist
+                {
+                    Title = newTodoItem.Title,
+                    Description = newTodoItem.Description,
+                    IsCompleted = newTodoItem.IsCompleted,
+                    createdDate = DateTime.UtcNow,
+                    UserId = UserId
+                };
+
             DbContext.Todolists.Add(todo);
             await DbContext.SaveChangesAsync();
-            newTodoItem.Title = string.Empty; // Clear the input after adding
-            await LoadTodoItems(); // Reload the list
+            newTodoItem = new(); // Reset the form
+            await LoadTodoItems();
         }
     }
 
@@ -78,12 +101,20 @@
         {
             DbContext.Todolists.Remove(item);
             await DbContext.SaveChangesAsync();
-            await LoadTodoItems(); // Reload the list
+            await LoadTodoItems();
         }
+    }
+
+    private async Task UpdateTodoStatus(Todolist item)
+    {
+        DbContext.Todolists.Update(item);
+        await DbContext.SaveChangesAsync();
     }
 
     private class TodoItemModel
     {
         public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public bool IsCompleted { get; set; } = false;
     }
 }

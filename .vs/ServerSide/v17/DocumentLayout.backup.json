@@ -3,16 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\subar\\source\\repos\\ServerSide\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{8EC9FBF1-5AEB-42C8-989D-3A18C682B245}|ServerSide\\ServerSide.csproj|c:\\users\\subar\\source\\repos\\serverside\\serverside\\components\\account\\pages\\registerconfirmation.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{8EC9FBF1-5AEB-42C8-989D-3A18C682B245}|ServerSide\\ServerSide.csproj|solutionrelative:serverside\\components\\account\\pages\\registerconfirmation.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8EC9FBF1-5AEB-42C8-989D-3A18C682B245}|ServerSide\\ServerSide.csproj|c:\\users\\subar\\source\\repos\\serverside\\serverside\\components\\account\\pages\\register.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{8EC9FBF1-5AEB-42C8-989D-3A18C682B245}|ServerSide\\ServerSide.csproj|solutionrelative:serverside\\components\\account\\pages\\register.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{8EC9FBF1-5AEB-42C8-989D-3A18C682B245}|ServerSide\\ServerSide.csproj|c:\\users\\subar\\source\\repos\\serverside\\serverside\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{8EC9FBF1-5AEB-42C8-989D-3A18C682B245}|ServerSide\\ServerSide.csproj|solutionrelative:serverside\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8EC9FBF1-5AEB-42C8-989D-3A18C682B245}|ServerSide\\ServerSide.csproj|c:\\users\\subar\\source\\repos\\serverside\\serverside\\components\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{8EC9FBF1-5AEB-42C8-989D-3A18C682B245}|ServerSide\\ServerSide.csproj|solutionrelative:serverside\\components\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8EC9FBF1-5AEB-42C8-989D-3A18C682B245}|ServerSide\\ServerSide.csproj|c:\\users\\subar\\source\\repos\\serverside\\serverside\\services\\inmemorystateservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8EC9FBF1-5AEB-42C8-989D-3A18C682B245}|ServerSide\\ServerSide.csproj|solutionrelative:serverside\\services\\inmemorystateservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8EC9FBF1-5AEB-42C8-989D-3A18C682B245}|ServerSide\\ServerSide.csproj|c:\\users\\subar\\source\\repos\\serverside\\serverside\\components\\account\\pages\\todomanager.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -26,56 +30,69 @@
       "DocumentGroups": [
         {
           "DockedWidth": 222,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "InMemoryStateService.cs",
-              "DocumentMoniker": "C:\\Users\\subar\\source\\repos\\ServerSide\\ServerSide\\Services\\InMemoryStateService.cs",
-              "RelativeDocumentMoniker": "ServerSide\\Services\\InMemoryStateService.cs",
-              "ToolTip": "C:\\Users\\subar\\source\\repos\\ServerSide\\ServerSide\\Services\\InMemoryStateService.cs",
-              "RelativeToolTip": "ServerSide\\Services\\InMemoryStateService.cs",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAcwBoAAAAuAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-18T22:22:08.389Z",
+              "DocumentIndex": 0,
+              "Title": "RegisterConfirmation.razor",
+              "DocumentMoniker": "C:\\Users\\subar\\source\\repos\\ServerSide\\ServerSide\\Components\\Account\\Pages\\RegisterConfirmation.razor",
+              "RelativeDocumentMoniker": "ServerSide\\Components\\Account\\Pages\\RegisterConfirmation.razor",
+              "ToolTip": "C:\\Users\\subar\\source\\repos\\ServerSide\\ServerSide\\Components\\Account\\Pages\\RegisterConfirmation.razor",
+              "RelativeToolTip": "ServerSide\\Components\\Account\\Pages\\RegisterConfirmation.razor",
+              "ViewState": "AgIAAIIAAAAAAAAAAAAAwH4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-03-19T19:20:02.2Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Home.razor",
-              "DocumentMoniker": "C:\\Users\\subar\\source\\repos\\ServerSide\\ServerSide\\Components\\Pages\\Home.razor",
-              "RelativeDocumentMoniker": "ServerSide\\Components\\Pages\\Home.razor",
-              "ToolTip": "C:\\Users\\subar\\source\\repos\\ServerSide\\ServerSide\\Components\\Pages\\Home.razor",
-              "RelativeToolTip": "ServerSide\\Components\\Pages\\Home.razor",
-              "ViewState": "AgIAACoAAAAAAAAAAAAAADMAAAAuAAAAAAAAAA==",
+              "Title": "Register.razor",
+              "DocumentMoniker": "C:\\Users\\subar\\source\\repos\\ServerSide\\ServerSide\\Components\\Account\\Pages\\Register.razor",
+              "RelativeDocumentMoniker": "ServerSide\\Components\\Account\\Pages\\Register.razor",
+              "ToolTip": "C:\\Users\\subar\\source\\repos\\ServerSide\\ServerSide\\Components\\Account\\Pages\\Register.razor",
+              "RelativeToolTip": "ServerSide\\Components\\Account\\Pages\\Register.razor",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAAFkAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-03-18T22:12:49.975Z",
+              "WhenOpened": "2025-03-19T19:18:41.989Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "NavMenu.razor",
               "DocumentMoniker": "C:\\Users\\subar\\source\\repos\\ServerSide\\ServerSide\\Components\\Layout\\NavMenu.razor",
               "RelativeDocumentMoniker": "ServerSide\\Components\\Layout\\NavMenu.razor",
               "ToolTip": "C:\\Users\\subar\\source\\repos\\ServerSide\\ServerSide\\Components\\Layout\\NavMenu.razor",
               "RelativeToolTip": "ServerSide\\Components\\Layout\\NavMenu.razor",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAAABgAAABUAAAAAAAAAA==",
+              "ViewState": "AgIAAA4AAAAAAAAAAADwvxgAAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-03-18T21:57:10.26Z",
+              "WhenOpened": "2025-03-19T19:11:17.535Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "Home.razor",
+              "DocumentMoniker": "C:\\Users\\subar\\source\\repos\\ServerSide\\ServerSide\\Components\\Pages\\Home.razor",
+              "RelativeDocumentMoniker": "ServerSide\\Components\\Pages\\Home.razor",
+              "ToolTip": "C:\\Users\\subar\\source\\repos\\ServerSide\\ServerSide\\Components\\Pages\\Home.razor",
+              "RelativeToolTip": "ServerSide\\Components\\Pages\\Home.razor",
+              "ViewState": "AgIAADAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-03-19T19:04:00.72Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "TodoManager.razor",
               "DocumentMoniker": "C:\\Users\\subar\\source\\repos\\ServerSide\\ServerSide\\Components\\Account\\Pages\\TodoManager.razor",
               "RelativeDocumentMoniker": "ServerSide\\Components\\Account\\Pages\\TodoManager.razor",
               "ToolTip": "C:\\Users\\subar\\source\\repos\\ServerSide\\ServerSide\\Components\\Account\\Pages\\TodoManager.razor",
               "RelativeToolTip": "ServerSide\\Components\\Account\\Pages\\TodoManager.razor",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAAD8AAAA6AAAAAAAAAA==",
+              "ViewState": "AgIAADEAAAAAAAAAAADwv2AAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-03-18T21:53:26.387Z",
               "EditorCaption": ""

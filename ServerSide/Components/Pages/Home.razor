@@ -4,23 +4,26 @@
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.EntityFrameworkCore
 @using ServerSide.Data
-@using ServerSide.Services
+@inject IJSRuntime JS
+
+
+@rendermode InteractiveServer
+
 
 @inject NavigationManager NavigationManager
 @inject ApplicationDbContext DbContext
-@inject InMemoryStateService InMemoryStateService
 
 <PageTitle>To-Do App</PageTitle>
 
 <AuthorizeView Context="authContext">
     <Authorized>
         <div class="main-container d-flex justify-content-center align-items-center vh-100">
-            <div class="col-md-6">
+            <div class="col-md-4 bg-light bg-opacity-75 p-4 rounded">
                 @if (!showTodoContent)
                 {
                 <h1>Validate CPR!</h1>
                 <p>Please enter your CPR number to access your To-Do list:</p>
-                <p>User: @userEmail!</p> <!-- Display user's email -->
+                <p>User: @userEmail</p> <!-- Display user's email -->
                     <EditForm Model="Input" OnValidSubmit="HandleValidSubmit" FormName="validateCPR">
                         <DataAnnotationsValidator />
                         <ValidationSummary class="text-danger" />
@@ -31,7 +34,7 @@
                             <ValidationMessage For="() => Input.Code" class="text-danger" />
                         </div>
 
-                        <button type="submit" class="w-100 btn btn-lg btn-primary" disabled="@isLoading">Submit</button>
+                        <button type="submit" class="w-100 btn btn-lg btn-primary">Submit</button>
                     </EditForm>
                     @if (!string.IsNullOrEmpty(validationMessage))
                     {
@@ -48,17 +51,21 @@
         </div>
     </Authorized>
     <NotAuthorized>
-        <div class="main-container">
-            <h1>Welcome to the To-Do App!</h1>
-            <p>This application helps you manage your tasks effectively.</p>
-            <p>Please log in to access your personal To-Do list.</p>
+        <div class="main-container d-flex justify-content-center align-items-center vh-100">
+            <div class="text-center bg-light bg-opacity-75 p-4 rounded">
+                <h1>Welcome to the To-Do App!</h1>
+                <p>This application helps you manage your tasks effectively.</p>
+                <p>Please log in to access your personal To-Do list.</p>
 
-            <div class="button-container">
-                <a class="btn btn-primary" href="/account/login">Login</a>
-                <a class="btn btn-secondary" href="/account/register">Register</a>
+                <div class="button-container">
+                    <a class="btn btn-primary" href="/account/login">Login</a>
+                    <a class="btn btn-secondary" href="/account/register">Register</a>
+                </div>
             </div>
         </div>
     </NotAuthorized>
+
+
 </AuthorizeView>
 
 @code {
@@ -67,7 +74,7 @@
     private string? userId;  // Ensure this is set
     private bool isSuccess = false;
     private bool showTodoContent = false;
-    private bool isLoading = false; // Loading state
+    private bool isUserAuthenticated; // Flag to check if user is authenticated
 
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
@@ -85,29 +92,48 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
-        if (user.Identity?.IsAuthenticated ?? false)
+        // Check if the user is authenticated
+        isUserAuthenticated = user.Identity?.IsAuthenticated ?? false;
+
+        if (isUserAuthenticated)
         {
             userEmail = user.FindFirst(ClaimTypes.Email)?.Value ?? "Unknown";
             userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
 
-            // Check if CPR has been previously verified
-            if (InMemoryStateService.TryGetSession(userId, out bool isVerified) && isVerified)
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Remove local storage key if the user is not authenticated
+            if (!isUserAuthenticated)
             {
-                showTodoContent = true; // Skip CPR validation
+                await JS.InvokeVoidAsync("localStorage.removeItem", "cprValidated");
+            }
+
+            var isCprValidated = await JS.InvokeAsync<string>("localStorage.getItem", "cprValidated");
+            if (isCprValidated == "true")
+            {
+                showTodoContent = true;
+                StateHasChanged(); // Trigger UI refresh
             }
         }
     }
 
+
     private async Task HandleValidSubmit()
     {
-        // Prevent multiple submissions
-        isLoading = true;
 
         // Trim spaces from input
         Input.Code = Input.Code.Trim();
-        await ValidateCprAsync(Input.Code);
+        bool isValid = await ValidateCprAsync(Input.Code);
 
-        isLoading = false; // Reset loading state
+        if (isValid)
+        {
+            await JS.InvokeVoidAsync("localStorage.setItem", "cprValidated", "true");
+        }
     }
 
     private async Task<bool> ValidateCprAsync(string cpr)
@@ -128,14 +154,12 @@
             var cprRecord = await DbContext.Cprs
                 .FirstOrDefaultAsync(c => c.UserId == userId);
 
-            if (cprRecord != null && cprRecord.CprNr == formattedCpr)
+            if (cprRecord != null && cprRecord.CprNumber == formattedCpr)
             {
                 isSuccess = true;
                 validationMessage = "CPR validation successful!";
                 showTodoContent = true;
 
-                // Set the session in memory
-                InMemoryStateService.SetSession(userId, true);
                 return true;
             }
             else
@@ -154,7 +178,6 @@
             return false;
         }
     }
-
 
     // Helper method to clean up CPR input
     private string FormatCpr(string cpr)

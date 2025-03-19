@@ -12,7 +12,15 @@ namespace ServerSide.Data
         public string UserId { get; set; } = string.Empty;
 
         [Required]
-        public string Item { get; set; } = string.Empty;
+        [StringLength(100)]
+        public string Title { get; set; }
+
+        public string Description { get; set; }
+
+
+        public bool IsCompleted { get; set; }
+
+        public DateTime createdDate   { get; set; } = DateTime.Now;
 
         // Navigation Property
         [ForeignKey("UserId")]

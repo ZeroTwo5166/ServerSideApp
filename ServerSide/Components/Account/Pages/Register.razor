@@ -18,7 +18,7 @@
 @inject RoleManager<IdentityRole> RoleManager
 
 <div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-    <div class="col-md-4">
+    <div class="col-md-4 bg-light bg-opacity-75 p-4 rounded">
         <StatusMessage Message="@Message" />
         <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
             <DataAnnotationsValidator />

@@ -4,14 +4,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ServerSide.Data
 {
-    public class Cpr
+    public class CprRecord
     {
         [Key]
         public int Id { get; set; }
 
         [Required]
         [StringLength(10, MinimumLength = 10)]
-        public string CprNr { get; set; } = string.Empty;
+        public string CprNumber { get; set; } = string.Empty;
 
         // Foreign key to Identity User
         [Required]

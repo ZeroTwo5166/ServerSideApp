@@ -5,6 +5,7 @@
 @using Microsoft.AspNetCore.Identity
 @using ServerSide.Data
 
+
 @inject SignInManager<ApplicationUser> SignInManager
 @inject ILogger<Login> Logger
 @inject NavigationManager NavigationManager
@@ -13,7 +14,7 @@
 <PageTitle>Log in</PageTitle>
 
 <div class="container d-flex justify-content-center align-items-center vh-100">
-    <div class="col-md-4">
+    <div class="col-md-4 bg-light bg-opacity-75 p-4 rounded">
         <h1>Log in</h1>
         <section>
             <StatusMessage Message="@errorMessage" />
@@ -86,7 +87,11 @@
         if (result.Succeeded)
         {
             Logger.LogInformation("User logged in.");
-            RedirectManager.RedirectTo(ReturnUrl);
+
+            StateHasChanged();
+
+             RedirectManager.RedirectTo(ReturnUrl);
+
         }
         else if (result.RequiresTwoFactor)
         {

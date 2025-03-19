@@ -35,6 +35,7 @@
 
                 <button type="submit" class="w-100 btn btn-lg btn-primary">Submit</button>
             </EditForm>
+
         }
         else
         {
@@ -108,10 +109,11 @@
             }
 
             // Check if the entered CPR already exists in the table
-            var cprEntry = await dbContext.Cprs.FirstOrDefaultAsync(c => c.CprNr == Input.Code);
+            var cprEntry = await dbContext.Cprs.FirstOrDefaultAsync(c => c.CprNumber == Input.Code);
             if (cprEntry is null)
             {
-                var newCpr = new Cpr { CprNr = Input.Code, UserId = user.Id }; // Use your actual Cpr class here
+                // If CPR does not exist, add it to the database
+                var newCpr = new CprRecord { CprNumber = Input.Code, UserId = user.Id };
                 dbContext.Cprs.Add(newCpr);
                 await dbContext.SaveChangesAsync();
                 statusMessage = "CPR saved successfully!";
@@ -125,10 +127,9 @@
                     message = "Your CPR has been added and email is verified.";
                     statusMessage = message;
 
-                    // Delay for 2 seconds before redirecting to the login page
-                    // await Task.Delay(2000);
+                    // Optional: Uncomment to redirect after success
+                    // await Task.Delay(2000); // Delay for 2 seconds before redirecting
                     // NavigationManager.NavigateTo("/Account/Login");
-                    // return; // Exit after redirection
                 }
                 else
                 {
@@ -137,15 +138,15 @@
             }
             else
             {
+                // If the CPR already exists, set the error message
                 statusMessage = "Error: This CPR is already registered.";
             }
 
-            statusMessage = message;
-
+            // Call StateHasChanged() to re-render the component and show the message
+            StateHasChanged();
         }
-
-        StateHasChanged();
     }
+
 
     private sealed class InputModel
     {

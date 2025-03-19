@@ -149,3 +149,4 @@ C:\Users\subar\source\repos\ServerSide\ServerSide\obj\Debug\net8.0\ref\ServerSid
 C:\Users\subar\source\repos\ServerSide\ServerSide\bin\Debug\net8.0\Microsoft.JSInterop.dll
 C:\Users\subar\source\repos\ServerSide\ServerSide\bin\Debug\net8.0\NetcodeHub.Packages.Extensions.LocalStorage.dll
 C:\Users\subar\source\repos\ServerSide\ServerSide\bin\Debug\net8.0\NetcodeHub.Packages.Extensions.SessionStorage.dll
+C:\Users\subar\source\repos\ServerSide\ServerSide\obj\Debug\net8.0\ServerSide.sourcelink.json
